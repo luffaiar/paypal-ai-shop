@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cozy Book & Tea Haven — Luxury AI Boutique & PayPal Checkout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Luxury Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="announcement-inner">
+      <span>⚜️ Complimentary Worldwide Insured Delivery • Live PayPal Sandbox v2 Verified • Authoritative Server Pricing</span>
+      <span class="announcement-promo">Use code <strong>COZY10</strong> for 10% off</span>
+    </div>
+  </div>
+
+  <!-- Navigation Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="logo-crest">
+          <span class="crest-icon">☕📖</span>
+        </div>
+        <div>
+          <h1 class="store-title">The Cozy Book & Tea Haven</h1>
+          <p class="store-subtitle">Bespoke Artisan Curations • Autonomous AI Concierge • PayPal Smart Checkout</p>
+        </div>
+      </div>
+
+      <!-- Quick Catalog Search -->
+      <div class="header-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="catalog-search" placeholder="Search single-estate teas, reading lights, gift sets..." autocomplete="off">
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <div class="security-badge" title="Security Rule: Pricing is verified on server directly from products.json.">
+          <span class="badge-lock">🔒</span>
+          <span>Verified Server Pricing</span>
+        </div>
+
+        <button id="architecture-info-btn" class="btn-ghost-header" title="Architecture & Security Review">
+          ℹ️ Architecture & Security
+        </button>
+
+        <button id="cart-toggle-btn" class="btn-cart-toggle">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-label">Cart</span>
+          <span id="header-cart-badge" class="cart-badge">0</span>
+          <span id="header-cart-total" class="cart-total-badge">$0.00</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Luxury Hero Section with Interactive Budget Slider -->
+  <section class="hero-section">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">✨ Bespoke Artisan Harvest 2026</div>
+        <h2 class="hero-headline">Handcrafted loose-leaf teas, nighttime reading essentials, and quiet contemplation.</h2>
+        <p class="hero-desc">
+          Browse our hand-selected boutique catalog below, or converse with <strong>Aura</strong>, your autonomous AI concierge. Ask tea brewing questions, set spending boundaries, and approve payment with PayPal.
+        </p>
+
+        <!-- Interactive Budget Slider Widget -->
+        <div class="budget-slider-card">
+          <div class="budget-slider-header">
+            <span class="slider-title">🎯 Interactive Budget Guard</span>
+            <div class="slider-readout">
+              <span class="slider-label">Spending Target:</span>
+              <strong id="slider-val-display">$30.00</strong>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="hero-budget-slider" min="15" max="80" step="5" value="30">
+            <div class="slider-ticks">
+              <span>$15</span>
+              <span>$30 (Gift Cap)</span>
+              <span>$45</span>
+              <span>$60</span>
+              <span>$80+</span>
+            </div>
+          </div>
+          <p id="slider-hint-text" class="slider-hint">
+            Showing all boutique pairings and gift boxes under <strong>$30.00</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full-Width Store Catalog Showcase (Amazon & Flipkart Style) -->
+  <main class="store-catalog-wrapper">
+    <div class="catalog-toolbar">
+      <div class="category-tabs" id="category-tabs">
+        <button class="cat-tab active" data-category="all">All Curations (32)</button>
+        <button class="cat-tab" data-category="tea">Master Teas 🍵</button>
+        <button class="cat-tab" data-category="reading">Reading Gear 📚</button>
+        <button class="cat-tab" data-category="accessories">Homeware 🕯️</button>
+        <button class="cat-tab" data-category="gift-sets">Gift Bundles 🎁</button>
+      </div>
+
+      <div class="catalog-meta-row">
+        <span id="catalog-count-display" class="catalog-count-pill">Showing 32 items</span>
+        <div class="catalog-sort">
+          <label for="catalog-sort-select">Sort by:</label>
+          <select id="catalog-sort-select" class="sort-select">
+            <option value="featured">Featured Curations</option>
+            <option value="rating">Highest Rated ⭐</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic 4-5 Column Amazon/Flipkart Product Cards Grid -->
+    <div id="products-grid" class="products-grid">
+      <!-- Injected dynamically via app.js -->
+    </div>
+  </main>
+
+  <!-- Slide-Out Shopping Cart Drawer with Working PayPal & Debit Card -->
+  <div id="cart-drawer-backdrop" class="drawer-backdrop hidden"></div>
+  <aside id="cart-drawer" class="cart-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <span class="drawer-icon">🛒</span>
+        <h3>Your Shopping Bag</h3>
+        <span id="drawer-cart-count" class="cart-count-pill">0 items</span>
+      </div>
+      <div class="drawer-actions">
+        <button id="clear-cart-btn" class="btn-ghost-sm text-danger">Clear</button>
+        <button id="close-cart-btn" class="btn-close-drawer">&times;</button>
+      </div>
+    </div>
+
+    <!-- Drawer Budget Guard -->
+    <div id="budget-guard-widget" class="drawer-budget-guard hidden">
+      <div class="budget-guard-header">
+        <span class="budget-guard-title">🎯 Budget Guard</span>
+        <span id="budget-progress-text" class="budget-guard-amount">$0.00 / $30.00</span>
+      </div>
+      <div class="budget-track">
+        <div id="budget-progress-bar" class="budget-fill" style="width: 0%"></div>
+      </div>
+      <p id="budget-status-tip" class="budget-guard-hint">Within your budget limit</p>
+    </div>
+
+    <!-- Promo Code Voucher Section -->
+    <div class="promo-code-bar">
+      <input type="text" id="promo-code-input" placeholder="Promo code (e.g. COZY10)" maxlength="15" autocomplete="off" />
+      <button id="apply-promo-btn" class="btn-promo-apply">Apply</button>
+    </div>
+    <div id="promo-status-msg" class="promo-msg hidden"></div>
+
+    <!-- Cart Items Scroll Area -->
+    <div id="cart-items-container" class="cart-items-scroll">
+      <!-- Dynamically rendered -->
+    </div>
+
+    <!-- Authoritative Pricing Breakdown & Payment Suite -->
+    <div class="drawer-footer">
+      <div class="pricing-breakdown">
+        <div class="price-row">
+          <span>Items Subtotal</span>
+          <span id="cart-subtotal">$0.00</span>
+        </div>
+        <div id="promo-discount-row" class="price-row text-success hidden">
+          <span>Promo Discount (<span id="promo-name-display">COZY10</span>)</span>
+          <span id="promo-discount-amount">-$0.00</span>
+        </div>
+        <div class="price-row">
+          <span>Insured Courier Delivery</span>
+          <span class="text-success font-semibold">COMPLIMENTARY</span>
+        </div>
+        <div class="price-row grand-total-row">
+          <span>Grand Total (USD)</span>
+          <span id="cart-grand-total">$0.00</span>
+        </div>
+        <div class="server-verified-notice">
+          🔒 Server-Authoritative Price Verified with PayPal Orders API v2
+        </div>
+      </div>
+
+      <!-- Payment Method Selection & Checkout Container -->
+      <div class="checkout-suite">
+        <button id="prepare-checkout-btn" class="btn-lock-checkout">
+          Proceed to Secure Checkout
+        </button>
+
+        <div id="payment-accordion" class="payment-accordion hidden">
+          <!-- Payment Method Tabs -->
+          <div class="payment-tabs">
+            <button id="tab-btn-paypal" class="pay-tab active">
+              <span>🅿️ PayPal</span>
+            </button>
+            <button id="tab-btn-card" class="pay-tab">
+              <span>💳 Debit or Credit Card</span>
+            </button>
+          </div>
+
+          <!-- Tab Content 1: Official PayPal Smart Buttons -->
+          <div id="tab-content-paypal" class="tab-content active">
+            <div class="paypal-info-pill">
+              <span>🛡️</span>
+              <p>Approve securely with PayPal Wallet. The AI never moves money without your explicit approval.</p>
+            </div>
+            <!-- Official PayPal Smart Buttons mount here -->
+            <div id="paypal-button-container"></div>
+            <!-- Backup simulation button if sandbox credentials are restricted -->
+            <button id="demo-sandbox-btn" class="btn-demo-paypal hidden">
+              <span>Approve with PayPal Sandbox (Direct Simulation)</span>
+            </button>
+          </div>
+
+          <!-- Tab Content 2: Direct Debit / Credit Card Form -->
+          <div id="tab-content-card" class="tab-content">
+            <form id="card-checkout-form" class="card-form">
+              <div class="card-icons-row">
+                <span class="card-badge-pill">VISA</span>
+                <span class="card-badge-pill">Mastercard</span>
+                <span class="card-badge-pill">AMEX</span>
+                <span class="card-badge-pill">Discover</span>
+                <span class="card-security-pill">🔒 256-Bit SSL</span>
+              </div>
+
+              <div class="form-group">
+                <label for="card-holder">Cardholder Name</label>
+                <input type="text" id="card-holder" placeholder="e.g. Jane Doe" required autocomplete="cc-name" />
+              </div>
+
+              <div class="form-group">
+                <label for="card-number">Debit or Credit Card Number</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">💳</span>
+                  <input type="text" id="card-number" placeholder="4000 1234 5678 9010" maxlength="19" required autocomplete="cc-number" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="card-exp">Expires</label>
+                  <input type="text" id="card-exp" placeholder="MM/YY" maxlength="5" required autocomplete="cc-exp" />
+                </div>
+                <div class="form-group">
+                  <label for="card-cvv">CVV / CVC</label>
+                  <input type="password" id="card-cvv" placeholder="123" maxlength="4" required autocomplete="cc-csc" />
+                </div>
+                <div class="form-group">
+                  <label for="card-zip">Postal Code</label>
+                  <input type="text" id="card-zip" placeholder="90210" maxlength="10" required autocomplete="postal-code" />
+                </div>
+              </div>
+
+              <button type="submit" id="pay-card-btn" class="btn-pay-card">
+                <span id="pay-card-btn-text">Pay with Debit Card</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Luxury Product Quick View Modal -->
+  <div id="quickview-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-quickview">
+      <button id="close-quickview-btn" class="btn-close-modal">&times;</button>
+      <div class="quickview-grid">
+        <div class="quickview-media">
+          <img id="qv-img" src="" alt="Product" />
+          <span id="qv-badge" class="qv-floating-badge">Artisan Harvest</span>
+        </div>
+        <div class="quickview-details">
+          <div id="qv-category" class="qv-cat">TEA</div>
+          <h2 id="qv-title" class="qv-title">Product Title</h2>
+          <div class="qv-rating-row">
+            <span id="qv-rating">⭐ 4.9</span>
+            <span class="bullet">•</span>
+            <span id="qv-reviews" class="qv-reviews">184 Verified Reviews</span>
+          </div>
+          <div id="qv-price" class="qv-price">$14.50</div>
+          <p id="qv-desc" class="qv-desc">Product detailed description...</p>
+
+          <div class="qv-specs-box">
+            <div class="qv-spec-item">
+              <span class="spec-label">Origin:</span>
+              <span id="qv-origin" class="spec-val">Calabria, Italy</span>
+            </div>
+            <div class="qv-spec-item">
+              <span class="spec-label">Tasting Profile:</span>
+              <span id="qv-notes" class="spec-val">Citrus, Lavender, Malt</span>
+            </div>
+            <div class="qv-spec-item">
+              <span class="spec-label">Ritual / Steeping:</span>
+              <span id="qv-steeping" class="spec-val">205°F • 4-5 mins</span>
+            </div>
+          </div>
+
+          <div class="qv-actions-row">
+            <div class="qv-qty-stepper">
+              <button id="qv-qty-minus" class="qv-qty-btn">-</button>
+              <span id="qv-qty-display">1</span>
+              <button id="qv-qty-plus" class="qv-qty-btn">+</button>
+            </div>
+            <button id="qv-add-btn" class="btn-qv-add">
+              <span>+ Add to Cart</span>
+            </button>
+            <button id="qv-ask-btn" class="btn-qv-ask" title="Ask Aura for pairing advice">
+              <span>💬 Ask Aura</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture & Security Modal -->
+  <div id="architecture-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-arch">
+      <div class="modal-header">
+        <h3>Architecture, PayPal Orders v2 & Security Safeguards</h3>
+        <button id="close-arch-btn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4>1. Security Rule: Authoritative Server Pricing</h4>
+        <p>Neither the browser client nor the AI model dictates transaction amounts. When <code>/api/paypal/create-order</code> or <code>/api/paypal/card-checkout</code> is invoked, the backend queries <code>products.json</code> directly, calculates the authoritative subtotal, applies verified server vouchers, and communicates directly with PayPal Orders API v2.</p>
+
+        <h4>2. Human-in-the-Loop Safeguard</h4>
+        <p>The AI concierge builds the cart, tracks budgets, and recommends pairings, but <strong>never moves money autonomously</strong>. Final checkout always requires explicit human approval via PayPal Smart Buttons or direct Debit Card authorization.</p>
+
+        <h4>3. PayPal Orders API v2 Client Credentials</h4>
+        <p>OAuth 2.0 token generation executes strictly on the backend. Client Secrets are never sent to the client browser, preserving institutional PCI & PayPal security guidelines.</p>
+
+        <h4>4. Dual Payment Suite</h4>
+        <ul>
+          <li><strong>PayPal Smart Buttons</strong>: Official PayPal JS SDK rendering Gold PayPal and Black Debit/Credit Card Smart Buttons.</li>
+          <li><strong>Direct Debit Card Processing</strong>: High-security inline card entry with real-time formatting, expiry verification, CVV masking, and server-side capture.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button id="close-arch-btn-2" class="btn-primary">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Confirmation Receipt Modal -->
+  <div id="receipt-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-receipt">
+      <div class="receipt-card">
+        <div class="success-badge">✓</div>
+        <h2 class="receipt-title">Payment Confirmed</h2>
+        <p class="receipt-subtitle">Your transaction has been captured via PayPal Orders API v2.</p>
+
+        <div class="receipt-details">
+          <div class="detail-row">
+            <span>Order Reference:</span>
+            <strong id="receipt-order-id">2HU14538YA969784J</strong>
+          </div>
+          <div class="detail-row">
+            <span>Payment Method:</span>
+            <span id="receipt-method-badge" class="badge-method">PayPal / Debit Card</span>
+          </div>
+          <div class="detail-row">
+            <span>Total Captured:</span>
+            <strong id="receipt-amount">$0.00 USD</strong>
+          </div>
+          <div class="detail-row">
+            <span>Status:</span>
+            <span class="badge-status">COMPLETED</span>
+          </div>
+        </div>
+
+        <div class="ai-summary-box">
+          <div class="ai-summary-title">💌 Aura's Personalized Order Letter:</div>
+          <div id="receipt-ai-summary" class="ai-summary-text"></div>
+        </div>
+
+        <button id="close-receipt-btn" class="btn-primary btn-block">
+          Complete & Start New Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Autonomous AI Concierge Dock (Amazon Rufus Style) -->
+  <div id="aura-floating-dock" class="aura-floating-dock">
+    <!-- Floating Launcher Pill Button -->
+    <button id="aura-launcher-btn" class="aura-launcher-btn" title="Open Aura AI Shopping Concierge">
+      <div class="launcher-avatar">🤖</div>
+      <div class="launcher-label">
+        <span class="launcher-title">Ask Aura</span>
+        <span class="launcher-tag">AI Concierge</span>
+      </div>
+      <span class="launcher-pulse"></span>
+    </button>
+
+    <!-- Floating Chat Window (Slide-up Dock) -->
+    <div id="aura-chat-window" class="aura-chat-window hidden">
+      <div class="aura-window-header">
+        <div class="agent-profile">
+          <div class="agent-avatar">🤖</div>
+          <div>
+            <div class="agent-name-row">
+              <h3 class="agent-name">Aura</h3>
+              <span class="agent-pill">AI Concierge</span>
+            </div>
+            <div class="agent-status-line">
+              <span class="status-pulse"></span>
+              <span>Active • Amazon Rufus Style Assistant</span>
+            </div>
+          </div>
+        </div>
+        <div class="window-controls">
+          <button id="clear-chat-btn" class="btn-window-action" title="Start fresh conversation">🔄</button>
+          <button id="minimize-chat-btn" class="btn-window-action" title="Minimize chat">⎯</button>
+          <button id="close-chat-btn" class="btn-window-action" title="Close chat">&times;</button>
+        </div>
+      </div>
+
+      <!-- Clean Chat Dialogue Feed (No Debug Action Logs) -->
+      <div id="chat-messages" class="chat-messages">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Chat Input Form -->
+      <form id="chat-form" class="chat-input-bar">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Ask Aura anything, set a budget, or add items..."
+          autocomplete="off"
+        />
+        <button type="submit" id="send-btn" class="btn-send" title="Send message">
+          <span>Send</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
