@@ -126,10 +126,10 @@ async function loadConfig() {
   try {
     const res = await fetch('/api/config');
     appConfig = await res.json();
-    console.log('[Config] Loaded:', appConfig);
+    const clientId = appConfig.clientId || appConfig.paypalClientId;
 
-    if (appConfig.paypalClientId && appConfig.paypalClientId.length > 10) {
-      loadPayPalScript(appConfig.paypalClientId);
+    if (clientId && clientId.length > 10) {
+      loadPayPalScript(clientId);
     } else {
       demoSandboxBtn.classList.remove('hidden');
     }

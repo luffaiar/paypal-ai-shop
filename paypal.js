@@ -13,7 +13,7 @@ const PAYPAL_BASE_URL = process.env.PAYPAL_MODE === 'live'
   : 'https://api-m.sandbox.paypal.com';
 
 const CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
-const CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
+const CLIENT_SECRET = process.env.PAYPAL_SECRET || process.env.PAYPAL_CLIENT_SECRET || '';
 
 /**
  * Checks if real PayPal credentials are provided

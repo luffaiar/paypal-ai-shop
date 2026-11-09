@@ -1,7 +1,18 @@
 require('dotenv').config();
+
+// STEP 2: Validate required environment variables at startup
+const requiredEnv = ['PAYPAL_CLIENT_ID', 'PAYPAL_SECRET', 'AI_API_KEY'];
+for (const varName of requiredEnv) {
+  if (!process.env[varName] || !process.env[varName].trim()) {
+    console.error(`\n❌ STARTUP ERROR: Missing required environment variable: ${varName}`);
+    process.exit(1);
+  }
+}
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 
 const {
@@ -17,9 +28,21 @@ const paypal = require('./paypal');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// STEP 5: Abuse Protection
 app.use(cors());
-app.use(express.json());
+
+// Rate Limiting: 20 requests per minute per IP for all /api/ routes
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again later.' },
+});
+app.use('/api/', apiLimiter);
+
+// Limit request body size to 10kb
+app.use(express.json({ limit: '10kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // In-memory sessions (keyed by sessionId header/cookie)
@@ -68,15 +91,7 @@ function getAuthoritativeCartBreakdown(session) {
 // 1. App Configuration & PayPal Public Client ID endpoint
 // SECURITY: Client secret is NEVER exposed to client. Only public client ID is sent.
 app.get('/api/config', (req, res) => {
-  const clientId = process.env.PAYPAL_CLIENT_ID || 'sb';
-  const isConfigured = paypal.isConfigured();
-  res.json({
-    paypalClientId: clientId,
-    isConfigured,
-    currency: 'USD',
-    storeName: 'The Cozy Book & Tea Haven',
-    securityMode: 'Server-Authoritative Pricing (Strict Tamper Prevention)',
-  });
+  res.json({ clientId: process.env.PAYPAL_CLIENT_ID });
 });
 
 // 2. Products Catalog endpoint
@@ -225,8 +240,8 @@ app.post('/api/chat', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Chat error:', err);
-    res.status(500).json({ error: 'Failed to process chat message.' });
+    console.error('Chat error:', err.message || err);
+    res.status(500).json({ error: 'Something went wrong.' });
   }
 });
 
@@ -259,8 +274,8 @@ app.post('/api/paypal/create-order', async (req, res) => {
       simulated: order.simulated || false,
     });
   } catch (err) {
-    console.error('Error creating PayPal order:', err);
-    res.status(500).json({ error: err.message || 'Could not initiate PayPal order.' });
+    console.error('Error creating PayPal order:', err.message || err);
+    res.status(500).json({ error: 'Something went wrong.' });
   }
 });
 
@@ -294,8 +309,8 @@ app.post('/api/paypal/capture-order', async (req, res) => {
       purchasedItems: getCartDetails(purchasedItems),
     });
   } catch (err) {
-    console.error('Error capturing PayPal order:', err);
-    res.status(500).json({ error: err.message || 'Could not capture PayPal payment.' });
+    console.error('Error capturing PayPal order:', err.message || err);
+    res.status(500).json({ error: 'Something went wrong.' });
   }
 });
 
@@ -363,9 +378,15 @@ app.post('/api/paypal/card-checkout', async (req, res) => {
       purchasedItems: getCartDetails(purchasedItems),
     });
   } catch (err) {
-    console.error('Error processing card checkout:', err);
-    res.status(500).json({ error: err.message || 'Payment card authorization failed.' });
+    console.error('Error processing card checkout:', err.message || err);
+    res.status(500).json({ error: 'Something went wrong.' });
   }
+});
+
+// Global error handling middleware (generic error, no stack trace leak)
+app.use((err, req, res, next) => {
+  console.error('[Server Error]', err.message || err);
+  res.status(500).json({ error: 'Something went wrong.' });
 });
 
 // Start Express Server

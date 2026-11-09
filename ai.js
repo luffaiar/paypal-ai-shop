@@ -670,7 +670,7 @@ function answerGeneralKnowledgeQuestion(text, session) {
  * otherwise seamlessly runs the fallback agent.
  */
 async function handleChatMessage(message, session) {
-  const geminiApiKey = process.env.GEMINI_API_KEY;
+  const aiApiKey = process.env.AI_API_KEY || process.env.GEMINI_API_KEY;
   const openaiApiKey = process.env.OPENAI_API_KEY;
 
   // Multi-turn message history in session
@@ -678,10 +678,10 @@ async function handleChatMessage(message, session) {
   session.history.push({ role: 'user', content: message });
 
   // 1. Google Gemini Tool Calling
-  if (geminiApiKey && geminiApiKey.trim().length > 10 && geminiApiKey !== 'YOUR_GEMINI_API_KEY') {
+  if (aiApiKey && aiApiKey.trim().length > 10 && aiApiKey !== 'YOUR_GEMINI_API_KEY' && aiApiKey !== 'demo_ai_key') {
     try {
-      console.log('[AI] Invoking Google Gemini with function calling...');
-      const response = await callGeminiWithTools(message, session, geminiApiKey);
+      console.log('[AI] Invoking LLM with function calling...');
+      const response = await callGeminiWithTools(message, session, aiApiKey);
       session.history.push({ role: 'assistant', content: response.reply });
       return response;
     } catch (err) {

@@ -73,8 +73,8 @@ async function runTests() {
   console.log('\n[1] Testing GET /api/config...');
   const cfg = await get('/api/config');
   console.log('Status:', cfg.status);
-  console.log('Config response:', cfg.data);
-  if (cfg.status !== 200) throw new Error('Config failed');
+  console.log('Config response: [clientId present:', Boolean(cfg.data && cfg.data.clientId) + ']');
+  if (cfg.status !== 200 || !cfg.data.clientId) throw new Error('Config failed');
 
   // 2. Chat: Search & Budget Guard
   console.log('\n[2] Testing POST /api/chat ("Gift for sister under $30, reading and tea")...');
