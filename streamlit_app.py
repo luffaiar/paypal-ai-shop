@@ -8,10 +8,26 @@ import re
 import requests
 import streamlit as st
 import streamlit.components.v1 as components
-from dotenv import load_dotenv
+# Load environment variables securely (supports local .env and Streamlit Cloud secrets)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
-# Load environment variables securely from .env
-load_dotenv()
+
+def get_secret_or_env(key_name, default=""):
+    """Fetch credential from OS environment or Streamlit secrets safely."""
+    val = os.getenv(key_name)
+    if val:
+        return val
+    try:
+        if key_name in st.secrets:
+            return st.secrets[key_name]
+    except Exception:
+        pass
+    return default
+
 
 # Page configuration
 st.set_page_config(
@@ -700,7 +716,7 @@ with tab_checkout:
             )
 
             # PayPal Smart Button HTML Component
-            paypal_client_id = os.getenv("PAYPAL_CLIENT_ID", "sb")
+            paypal_client_id = get_secret_or_env("PAYPAL_CLIENT_ID", "sb")
             formatted_amount = f"{totals['total']:.2f}"
 
             paypal_html = f"""
